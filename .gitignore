@@ -2,3 +2,5 @@ data/
 __pycache__/
 auth.json
 nohup.out
+.venv/
+/generated_images
