@@ -19,13 +19,14 @@ def train_n_epochs(n_epochs, model, label_type, train_loader, valid_loader, crit
         
         #### Model for training 
         model.train()
-        for i, (data, ret5, ret20) in enumerate(train_loader):
-            assert label_type in ['RET5', 'RET20'], f"Wrong Label Type: {label_type}"
+        for i, (data, ret5, ret20, ret60) in enumerate(train_loader):
+            assert label_type in ['RET5', 'RET20', 'RET60'], f"Wrong Label Type: {label_type}"
             if label_type == 'RET5':
                 target = ret5
-            else:
+            elif label_type == 'RET20':
                 target = ret20
-
+            else:
+                target = ret60
             target = (1-target).unsqueeze(1) @ torch.LongTensor([1., 0.]).unsqueeze(1).T + target.unsqueeze(1) @ torch.LongTensor([0, 1]).unsqueeze(1).T
             target = target.to(torch.float32)
 
@@ -48,13 +49,15 @@ def train_n_epochs(n_epochs, model, label_type, train_loader, valid_loader, crit
 
         #### Model for validation
         model.eval()
-        for i, (data, ret5, ret20) in enumerate(valid_loader):
-            assert label_type in ['RET5', 'RET20'], f"Wrong Label Type: {label_type}"
+        for i, (data, ret5, ret20, ret60) in enumerate(valid_loader):
+            assert label_type in ['RET5', 'RET20', 'RET60'], f"Wrong Label Type: {label_type}"
             if label_type == 'RET5':
                 target = ret5
-            else:
+            elif label_type == 'RET20':
                 target = ret20
-                
+            else:
+                target = ret60
+
             target = (1-target).unsqueeze(1) @ torch.LongTensor([1., 0.]).unsqueeze(1).T + target.unsqueeze(1) @ torch.LongTensor([0, 1]).unsqueeze(1).T
             target = target.to(torch.float32)
                 
@@ -93,10 +96,10 @@ def train_n_epochs(n_epochs, model, label_type, train_loader, valid_loader, crit
                 }, savefile)
         else:
             invariant_epochs = invariant_epochs + 1
-        
-        if invariant_epochs >= early_stop_epoch:
-            print(f"Early Stop at Epoch [{epoch_i}]: Performance hasn't enhanced for {early_stop_epoch} epochs")
-            break
+
+        # if invariant_epochs >= early_stop_epoch:
+        #     print(f"Early Stop at Epoch [{epoch_i}]: Performance hasn't enhanced for {early_stop_epoch} epochs")
+        #     break
 
     return train_loss_set, valid_loss_set, train_acc_set, valid_acc_set
 
