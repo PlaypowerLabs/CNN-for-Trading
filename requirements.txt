@@ -1,8 +1,20 @@
-numpy
-pandas
+# Core scientific stack
+numpy>=1.24.0
+pandas>=2.2.0
+matplotlib>=3.8.0
+
+# Utilities
+PyYAML>=6.0
+tqdm>=4.66.0
+joblib>=1.3.0
+
+# Deep learning
+torch>=2.2.0
+
+# Imbalanced learning
+imbalanced-learn>=0.12.0
+
+# Others
 tqdm
-joblib
-imbalanced-learn
 kagglehub
-matplotlib
-torch
+threadpoolctl>=3.1.0

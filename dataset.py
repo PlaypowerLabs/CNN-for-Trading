@@ -159,7 +159,7 @@ class ImageDataSet:
         assert (
             start_date < end_date
         ), f"start date {start_date} cannnot be later than end date {end_date}"
-        assert win_size in [5, 20], f"Wrong look back days: {win_size}"
+        assert win_size in [5, 20, 60], f"Wrong look back days: {win_size}"
         assert mode in ["train", "test", "inference"], f"Type Error: {mode}"
         assert label in ["RET5", "RET20"], f"Wrong Label: {label}"
         assert indicators is None or isinstance(
@@ -170,9 +170,12 @@ class ImageDataSet:
         if win_size == 5:
             self.image_size = (32, 15)
             self.extra_dates = datetime.timedelta(days=40)
-        else:
+        elif win_size == 20:
             self.image_size = (64, 60)
             self.extra_dates = datetime.timedelta(days=40)
+        else:
+            self.image_size = (128, 180)
+            self.extra_dates = datetime.timedelta(days=60)
 
         self.start_date = start_date
         self.end_date = end_date
@@ -187,13 +190,13 @@ class ImageDataSet:
 
         # Log info
         if indicators:
-            ind_info = [
-                (
-                    self.indicators[2 * i].NAME,
-                    str(self.indicators[2 * i + 1].PARAM).split(" "),
-                )
-                for i in range(len(self.indicators) // 2)
-            ]
+            ind_info = []
+            for ind_dict in indicators:
+                for ind, params in ind_dict.items():
+                    if isinstance(params, list):
+                        ind_info.append((ind, [str(p) for p in params]))
+                    else:
+                        ind_info.append((ind, [str(params)]))
         else:
             ind_info = []
         print(
@@ -308,11 +311,11 @@ class ImageDataSet:
 # reload(_U)  # Remove or replace if not needed
 def main():
     dataset = ImageDataSet(
-        win_size=5,  # Lookback window (5 or 20)
+        win_size=60,  # Lookback window (5 or 20)
         start_date=20050101,  # Example start date (YYYYMMDD int)
         end_date=20050105,  # Example end date (YYYYMMDD int)
         mode="train",  # "train", "test", or "inference"
-        label="RET20",  # "RET5" or "RET20"
+        label="RET5",  # "RET5" or "RET20"
         indicators=[{"MA": 20}],  # e.g. [{"MA": 20}] if needed
         show_volume=True,
         parallel_num=-1,  # Use all CPUs
