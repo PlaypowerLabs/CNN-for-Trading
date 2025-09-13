@@ -97,4 +97,64 @@ class CNN20d(nn.Module):
         x = self.Softmax(x)
         
         return x
-    
+
+
+class CNN60d(nn.Module):
+    # Input: [N, (1), 128, 180]; Output: [N, 2]
+    # Four Convolution Blocks
+
+    def init_weights(self, m):
+        if isinstance(m, nn.Linear) or isinstance(m, nn.Conv2d):
+            torch.nn.init.xavier_uniform(m.weight)
+            m.bias.data.fill_(0.01)
+
+    def __init__(self):
+        super(CNN60d, self).__init__()
+        self.conv1 = nn.Sequential(OrderedDict([
+            ('Conv', nn.Conv2d(1, 64, (5, 3), padding=(4, 1), stride=(4, 1), dilation=(3, 1))), # output size: [N, 64, 32, 180]
+            ('BN', nn.BatchNorm2d(64, affine=True)),
+            ('ReLU', nn.ReLU()),
+            ('Max-Pool', nn.MaxPool2d((2,1))) # output size: [N, 64, 16, 180]
+        ]))
+        self.conv1 = self.conv1.apply(self.init_weights)
+
+        self.conv2 = nn.Sequential(OrderedDict([
+            ('Conv', nn.Conv2d(64, 128, (5, 3), padding=(4, 1), stride=(1, 1), dilation=(2, 1))), # output size: [N, 128, 16, 180]
+            ('BN', nn.BatchNorm2d(128, affine=True)),
+            ('ReLU', nn.ReLU()),
+            ('Max-Pool', nn.MaxPool2d((2,1))) # output size: [N, 128, 8, 180]
+        ]))
+        self.conv2 = self.conv2.apply(self.init_weights)
+
+        self.conv3 = nn.Sequential(OrderedDict([
+            ('Conv', nn.Conv2d(128, 256, (5, 3), padding=(3, 1), stride=(1, 1), dilation=(1, 1))), # output size: [N, 256, 10, 180]
+            ('BN', nn.BatchNorm2d(256, affine=True)),
+            ('ReLU', nn.ReLU()),
+            ('Max-Pool', nn.MaxPool2d((2,1))) # output size: [N, 256, 5, 180]
+        ]))
+        self.conv3 = self.conv3.apply(self.init_weights)
+
+        self.conv4 = nn.Sequential(OrderedDict([
+            ('Conv', nn.Conv2d(256, 512, (5, 3), padding=(2, 1), stride=(1, 1), dilation=(1, 1))), # output size: [N, 512, 5, 180]
+            ('BN', nn.BatchNorm2d(512, affine=True)),
+            ('ReLU', nn.ReLU()),
+            ('Max-Pool', nn.MaxPool2d((2,1))) # output size: [N, 512, 2, 180]
+        ]))
+        self.conv4 = self.conv4.apply(self.init_weights)
+
+        self.DropOut = nn.Dropout(p=0.5)
+        self.FC = nn.Linear(184320, 2)
+        self.init_weights(self.FC)
+        self.Softmax = nn.Softmax(dim=1)
+
+    def forward(self, x): # input: [N, 128, 180]
+        x = x.unsqueeze(1).to(torch.float32)   # output size: [N, 1, 128, 180]
+        x = self.conv1(x) # output size: [N, 64, 16, 180]
+        x = self.conv2(x) # output size: [N, 128, 8, 180]
+        x = self.conv3(x) # output size: [N, 256, 5, 180]
+        x = self.conv4(x) # output size: [N, 512, 2, 180]
+        x = self.DropOut(x.view(x.shape[0], -1))
+        x = self.FC(x) # output size: [N, 2]
+        x = self.Softmax(x)
+
+        return x
