@@ -7,7 +7,7 @@ DATASET:
     MODE: default
     INDICATORS:
         - NAME: MA
-        - PARAM: 60 # using data augmentation
+        - PARAM: 5 # using data augmentation
     SHOW_VOLUME: True # using data augmentation
     SAMPLE_RATE: 0.2
     #  PARALLEL_NUM: 32
@@ -27,7 +27,7 @@ TRAIN:
 
 TEST:
     START_DATE: 20201231
-    END_DATE: 20211231
+    END_DATE: 20221231
 
 INFERENCE:
     FACTORS_SAVE_FILE: factors/I60R20_OHLC/I60R20_OHLC_20-21.csv
