@@ -21,6 +21,7 @@ def cal_indicators(tabular_df, indicator_name, parameter):
         MA = tabular_df["Close"].rolling(slice_win_size, min_periods=1).mean()
         return MA  # pd.Series
 
+
 def single_symbol_latest_image(
     tabular_df, image_size, indicators, show_volume, lookback_days=60
 ):
