@@ -1,0 +1,12 @@
+# Configuration 5: Balanced Medium (60-day window)
+DATASET:
+  LOOKBACK_WIN: 60
+
+TRAIN:
+  LABEL: "RET5"
+  BATCH_SIZE: 64
+  NEPOCH: 120
+  EARLY_STOP_EPOCH: 15
+  LEARNING_RATE: 0.0002
+  WEIGHT_DECAY: 0.015
+  VALID_RATIO: 0.25

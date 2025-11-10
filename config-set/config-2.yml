@@ -1,0 +1,12 @@
+# Configuration 2: Aggressive Learning (60-day window)
+DATASET:
+  LOOKBACK_WIN: 60
+
+TRAIN:
+  LABEL: "RET5"
+  BATCH_SIZE: 64
+  NEPOCH: 300
+  EARLY_STOP_EPOCH: 20
+  LEARNING_RATE: 0.0005
+  WEIGHT_DECAY: 0.005
+  VALID_RATIO: 0.25

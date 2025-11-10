@@ -1,0 +1,12 @@
+# Configuration 3: High Regularization (60-day window)
+DATASET:
+  LOOKBACK_WIN: 60
+
+TRAIN:
+  LABEL: "RET5"
+  BATCH_SIZE: 16
+  NEPOCH: 150
+  EARLY_STOP_EPOCH: 8
+  LEARNING_RATE: 0.00001
+  WEIGHT_DECAY: 0.05
+  VALID_RATIO: 0.35

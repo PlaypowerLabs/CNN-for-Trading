@@ -1,0 +1,12 @@
+# Configuration 9: Moderate Complexity (60-day window)
+DATASET:
+  LOOKBACK_WIN: 60
+
+TRAIN:
+  LABEL: "RET5"
+  BATCH_SIZE: 32
+  NEPOCH: 180
+  EARLY_STOP_EPOCH: 18
+  LEARNING_RATE: 0.0001
+  WEIGHT_DECAY: 0.02
+  VALID_RATIO: 0.3

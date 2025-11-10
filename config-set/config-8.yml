@@ -1,0 +1,12 @@
+# Configuration 8: Quick Convergence (60-day window)
+DATASET:
+  LOOKBACK_WIN: 60
+
+TRAIN:
+  LABEL: "RET5"
+  BATCH_SIZE: 512
+  NEPOCH: 40
+  EARLY_STOP_EPOCH: 5
+  LEARNING_RATE: 0.005
+  WEIGHT_DECAY: 0.001
+  VALID_RATIO: 0.15
